@@ -22,8 +22,8 @@ class CityDetail(APIView):
             city = City.objects.get(pk=pk)
             return city
         except City.DoesNotExist:
-            from django.http import Http404
-            raise Http404
+            from django.http import Http400
+            raise Http400
 
     def get(self, request, pk):
         city = self.get_object(pk)
