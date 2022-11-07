@@ -23,6 +23,7 @@ class CityStreetsSerializer(serializers.ModelSerializer):
         model = City
         fields = ('city_name', 'streets')
 
+
 class ShopSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shop
