@@ -53,11 +53,13 @@ class ShopDetail(APIView):
 
             elif int(is_open) == 0:
                 # Какой-то хак, мб можно было взять фильтр по открытым магазинам и разность со всеми магазинами
-                shops = shops.filter(
-                    Q(open_time__gt=current_time, close_time__lt=current_time) |
-                    Q(open_time__lt=current_time, close_time__lt=current_time) |
-                    Q(open_time__gt=current_time, close_time__gt=current_time)
-                )
+                # shops = shops.filter(
+                #     Q(open_time__gt=current_time, close_time__lt=current_time) |
+                #     Q(open_time__lt=current_time, close_time__lt=current_time) |
+                #     Q(open_time__gt=current_time, close_time__gt=current_time)
+                # )
+                # Лол, вот и нашел хак для разности множеств
+                shops = shops.filter(~Q(open_time__lte=current_time, close_time__gte=current_time))
 
         return shops.filter(**filter_params)
 
