@@ -36,6 +36,7 @@ class ShopDetail(APIView):
         street = self.request.query_params.get('street', None)
         is_open = self.request.query_params.get('open', None)
         shops = Shop.objects.all().prefetch_related('street', 'city')
+        print(is_open)
 
         filter_params = {}
 
@@ -44,12 +45,12 @@ class ShopDetail(APIView):
         if street:
             filter_params['street__street_name'] = street
 
-        if is_open is not None:
+        if is_open is not None and is_open.isdigit():
             current_time = datetime.now().time()
-            if is_open == 1:
+            if int(is_open) == 1:
                 shops = shops.filter(open_time__lte=current_time, close_time__gte=current_time)
 
-            elif is_open == 0:
+            elif int(is_open) == 0:
                 shops = shops.filter(open_time__gt=current_time, close_time__lt=current_time)
 
         return shops.filter(**filter_params)
