@@ -35,7 +35,7 @@ class ShopDetail(APIView):
         city = self.request.query_params.get('city', None)
         street = self.request.query_params.get('street', None)
         is_open = self.request.query_params.get('open', None)
-        shops = Shop.objects.all()
+        shops = Shop.objects.all().prefetch_related('street', 'city')
 
         filter_params = {}
 
