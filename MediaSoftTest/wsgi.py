@@ -37,7 +37,7 @@ if not User.objects.filter(email='admin@admin.ru').exists():
     shops = [
         Shop(shop_name='Лента Охта-Молл', street=streets[-1], city=cities[2], home='3А', open_time=datetime.time(0, 0),
              close_time=datetime.time(23, 59)),
-        Shop(shop_name='Мини Лента', street=streets[-1], city=cities[2], home='3к1', open_time=datetime.time(8, 0),
+        Shop(shop_name='Мини Лента', street=streets[1], city=cities[2], home='3к1', open_time=datetime.time(8, 0),
              close_time=datetime.time(22, 0)),
         Shop(shop_name='Гуливер', street=streets[0], city=cities[0], home='1', open_time=datetime.time(8, 0),
              close_time=datetime.time(22, 0)),
