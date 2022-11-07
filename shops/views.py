@@ -1,10 +1,13 @@
+from datetime import datetime
+
+from django.db.models import Q
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from shops.models import City
-from shops.serializers import CitySerializer, CityStreetsSerializer
+from shops.models import City, Shop
+from shops.serializers import CitySerializer, CityStreetsSerializer, ShopSerializer
 
 
 # Create your views here.
@@ -18,7 +21,6 @@ class CityDetail(APIView):
     def get_object(self, pk):
         try:
             city = City.objects.get(pk=pk)
-            print(list(city.street_set.all()))
             return city
         except City.DoesNotExist:
             from django.http import Http404
@@ -27,5 +29,41 @@ class CityDetail(APIView):
     def get(self, request, pk):
         city = self.get_object(pk)
         serializer = CityStreetsSerializer(city)
-        print(serializer.data)
         return Response(serializer.data)
+
+
+class ShopDetail(APIView):
+    def get_queryset(self):
+        city = self.request.query_params.get('city', None)
+        street = self.request.query_params.get('street', None)
+        is_open = self.request.query_params.get('open', None)
+        shops = Shop.objects.all()
+
+        filter_params = {}
+
+        if city:
+            filter_params['city__city_name'] = city
+        if street:
+            filter_params['street__street_name'] = street
+
+        if is_open is not None:
+            current_time = datetime.now().time()
+            if is_open == '1':
+                shops = shops.filter(open_time__lte=current_time, close_time__gte=current_time)
+
+            elif is_open == '0':
+                shops = shops.filter(open_time__gt=current_time, close_time__lt=current_time)
+
+        return shops.filter(**filter_params)
+
+    def get(self, request):
+        shops = self.get_queryset()
+        serializer = ShopSerializer(shops, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ShopSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data.get('id'))
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

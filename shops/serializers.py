@@ -1,6 +1,6 @@
 from rest_framework import viewsets, serializers
 
-from shops.models import City, Street
+from shops.models import City, Street, Shop
 
 
 class CitySerializer(serializers.ModelSerializer):
@@ -22,3 +22,8 @@ class CityStreetsSerializer(serializers.ModelSerializer):
     class Meta:
         model = City
         fields = ('city_name', 'streets')
+
+class ShopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shop
+        fields = ('shop_name', 'street', 'city', 'home', 'open_time', 'close_time')
