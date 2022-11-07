@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.db.models import Q
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -51,7 +52,12 @@ class ShopDetail(APIView):
                 shops = shops.filter(open_time__lte=current_time, close_time__gte=current_time)
 
             elif int(is_open) == 0:
-                shops = shops.filter(open_time__gt=current_time, close_time__lt=current_time)
+                # Какой-то хак, мб можно было взять фильтр по открытым магазинам и разность со всеми магазинами
+                shops = shops.filter(
+                    Q(open_time__gt=current_time, close_time__lt=current_time) |
+                    Q(open_time__lt=current_time, close_time__lt=current_time) |
+                    Q(open_time__gt=current_time, close_time__gt=current_time)
+                )
 
         return shops.filter(**filter_params)
 
