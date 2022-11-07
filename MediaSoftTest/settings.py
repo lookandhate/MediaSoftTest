@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': 'media_soft_test',
         'USER': 'media_soft_test',
         'PASSWORD': '123',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
 
     }
