@@ -46,10 +46,10 @@ class ShopDetail(APIView):
 
         if is_open is not None:
             current_time = datetime.now().time()
-            if is_open == '1':
+            if is_open == 1:
                 shops = shops.filter(open_time__lte=current_time, close_time__gte=current_time)
 
-            elif is_open == '0':
+            elif is_open == 0:
                 shops = shops.filter(open_time__gt=current_time, close_time__lt=current_time)
 
         return shops.filter(**filter_params)
