@@ -11,6 +11,10 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+from django.contrib.auth.models import User
+
+admin = User.objects.create_superuser('admin', 'admin@admin.ru', 'admin')
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MediaSoftTest.settings')
 
 application = get_wsgi_application()
