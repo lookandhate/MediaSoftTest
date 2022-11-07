@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from shops.views import CityViewSet
+from shops.views import CityViewSet, CityDetail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('city/', CityViewSet.as_view({'get': 'list'})),
+    path('city/<int:pk>/', CityDetail.as_view()),
 ]
